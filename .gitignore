@@ -4,3 +4,4 @@ build/
 build.log
 include/config/
 include/generated/
+3rdparty/QuadProgpp
