@@ -46,7 +46,7 @@ extern "C" struct updateParams{
     double oa0, oa1, oa2;
     
     // 当前刚体欧拉角
-    double r, p, y;
+    double quat0, quat1, quat2, quat3;
     // 腿实际电机角度
     double t00,t01,t02;
     double t10,t11,t12;

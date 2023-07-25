@@ -4,6 +4,7 @@
 #include <chrono>
 
 extern Mat3 rpy2Matrix(Vec3 rpy);
+extern Mat3 quat2Matrix(Vec4 quat);
 extern Mat3 crossMultiplyMat(Vec3 vec);
 extern Mat3 inverseMat(Mat3 mat);
 extern Mat4x3 foldVector(Vec12 vec);
