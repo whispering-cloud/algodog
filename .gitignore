@@ -1,0 +1,6 @@
+build/
+.vscode/
+.build/
+build.log
+include/config/
+include/generated/
