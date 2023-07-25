@@ -50,7 +50,8 @@ extern "C" updateResult update(updateParams param){
     dogrun.omegaAcc(0) = param.oa0;
     dogrun.omegaAcc(1) = param.oa1;
     dogrun.omegaAcc(2) = param.oa2;
-    dogrun.Rs_b = rpy2Matrix(Vec3({param.y,param.p,param.r}));
+    //dogrun.Rs_b = rpy2Matrix(Vec3({param.y,param.p,param.r}));
+    dogrun.Rs_b = quat2Matrix(Vec4({param.quat0, param.quat1, param.quat2, param.quat3}));
     dogrun.legs[0]->theta(0) = param.t00;
     dogrun.legs[0]->theta(1) = param.t01;
     dogrun.legs[0]->theta(2) = param.t02;

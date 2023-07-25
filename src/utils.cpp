@@ -37,10 +37,10 @@ Mat3 crossMultiplyMat(Vec3 vec){
 
 Mat3 quat2Matrix(Vec4 quat){
     Mat3 res;
-    double e0 = q(0);
-    double e1 = q(1);
-    double e2 = q(2);
-    double e3 = q(3);
+    double e0 = quat(0);
+    double e1 = quat(1);
+    double e2 = quat(2);
+    double e3 = quat(3);
     res << 1 - 2 * (e2 * e2 + e3 * e3), 2 * (e1 * e2 - e0 * e3),
             2 * (e1 * e3 + e0 * e2), 2 * (e1 * e2 + e0 * e3),
             1 - 2 * (e1 * e1 + e3 * e3), 2 * (e2 * e3 - e0 * e1),
