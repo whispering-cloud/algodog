@@ -6,7 +6,7 @@
 
 Chronostasis chron;
 Mat3 INTERTIA;
-Balancer dogrun;
+Balancer *dogrun;
 Vec3 Pg_b;
 KineticControl taucalc;
 double mass;
@@ -32,7 +32,7 @@ extern "C" int init(initParams param){
 
     
     length << param.l1, param.l2, param.l3;
-    dogrun = Balancer(length, vecW, vecU, vecS);
+    dogrun = new Balancer(length, vecW, vecU, vecS, param.alpha, param.beta, param.fric);
     taucalc = KineticControl();
     mass = param.m;
     Pg_b(0) = param.pg_b0;
@@ -44,35 +44,35 @@ extern "C" int init(initParams param){
 
 extern "C" updateResult update(updateParams param){
     updateResult res;
-    dogrun.vecAcc(0) = param.a00;
-    dogrun.vecAcc(1) = param.a01;
-    dogrun.vecAcc(2) = param.a02;
-    dogrun.omegaAcc(0) = param.oa0;
-    dogrun.omegaAcc(1) = param.oa1;
-    dogrun.omegaAcc(2) = param.oa2;
-    //dogrun.Rs_b = rpy2Matrix(Vec3({param.y,param.p,param.r}));
-    dogrun.Rs_b = quat2Matrix(Vec4({param.quat0, param.quat1, param.quat2, param.quat3}));
-    dogrun.legs[0]->theta(0) = param.t00;
-    dogrun.legs[0]->theta(1) = param.t01;
-    dogrun.legs[0]->theta(2) = param.t02;
-    dogrun.legs[1]->theta(0) = param.t10;
-    dogrun.legs[1]->theta(1) = param.t11;
-    dogrun.legs[1]->theta(2) = param.t12;
-    dogrun.legs[2]->theta(0) = param.t20;
-    dogrun.legs[2]->theta(1) = param.t21;
-    dogrun.legs[2]->theta(2) = param.t22;
-    dogrun.legs[3]->theta(0) = param.t30;
-    dogrun.legs[3]->theta(1) = param.t31;
-    dogrun.legs[3]->theta(2) = param.t32;
+    dogrun->vecAcc(0) = param.a00;
+    dogrun->vecAcc(1) = param.a01;
+    dogrun->vecAcc(2) = param.a02;
+    dogrun->omegaAcc(0) = param.oa0;
+    dogrun->omegaAcc(1) = param.oa1;
+    dogrun->omegaAcc(2) = param.oa2;
+    //dogrun->Rs_b = rpy2Matrix(Vec3({param.y,param.p,param.r}));
+    dogrun->Rs_b = quat2Matrix(Vec4({param.quat0, param.quat1, param.quat2, param.quat3}));
+    dogrun->legs[0]->theta(0) = param.t00;
+    dogrun->legs[0]->theta(1) = param.t01;
+    dogrun->legs[0]->theta(2) = param.t02;
+    dogrun->legs[1]->theta(0) = param.t10;
+    dogrun->legs[1]->theta(1) = param.t11;
+    dogrun->legs[1]->theta(2) = param.t12;
+    dogrun->legs[2]->theta(0) = param.t20;
+    dogrun->legs[2]->theta(1) = param.t21;
+    dogrun->legs[2]->theta(2) = param.t22;
+    dogrun->legs[3]->theta(0) = param.t30;
+    dogrun->legs[3]->theta(1) = param.t31;
+    dogrun->legs[3]->theta(2) = param.t32;
 
 
     Vec12 supportF;
 
-    dogrun.gt;
+    dogrun->gt;
 
-    supportF = dogrun.solveKinetic();
+    supportF = dogrun->solveKinetic();
     Mat4x3 t;
-    t = taucalc.invKinetic(supportF, &dogrun);
+    t = taucalc.invKinetic(supportF, dogrun);
     res.t00 = t(0,0);
     res.t01 = t(0,1);
     res.t02 = t(0,2);

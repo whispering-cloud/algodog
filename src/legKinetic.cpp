@@ -1,6 +1,7 @@
 #include "legKinetic.h"
 #include "moduleIO.h"
 #include <cmath>
+#include <iostream>
 
 Vec3 Leg::forwardKinetic(Vec3 theta){
     double s1 = std::sin(theta(0));
@@ -63,13 +64,15 @@ Vec3 Leg::deriveBackwardKinetic(Vec3 vel, Vec3 theta){
 
 Vec3 Leg::getPb_i(){
     Vec3 offset;
+    offset.setZero();
     offset<< ((id & 2)?-1:1) * fl_x, ((id & 1)?-1:1) * fl_y, 0;
+
     return offset + forwardKinetic(theta);
 }
 
-void Leg::configLeg(int index, Vec3 length){
+Leg::Leg(int index, Vec3 length){
     id = index;
-    lx = length;
-    lx(1) = lx(1) * side();
-    lx(2) = -lx(2);
+    lx(0) = length(0);
+    lx(1) = length(1) * side();
+    lx(2) = -length(2);
 }

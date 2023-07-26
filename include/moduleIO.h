@@ -10,7 +10,7 @@
 const Vec3 G({0,0,-9.8});
 
 extern Mat3 INTERTIA;
-extern Balancer dogrun;
+extern Balancer *dogrun;
 extern KineticControl taucalc;
 extern Vec3 Pg_b;
 extern double mass;
@@ -37,6 +37,7 @@ extern "C" struct initParams{
     double w0, w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11; //  10, 10, 4, 10, 10, 4, 10, 10, 4, 10, 10, 4
     double u0, u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11; //  3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
     double s0, s1, s2, s3, s4, s5;  // 20, 20, 50, 450, 450, 450
+    double alpha, beta, fric; // 3, 5, 0.4
 };
 
 extern "C" struct updateParams{

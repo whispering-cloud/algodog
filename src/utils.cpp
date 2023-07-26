@@ -30,7 +30,7 @@ Mat3 crossMultiplyMat(Vec3 vec){
  Mat4x3 foldVector(Vec12 vec){
     Mat4x3 res;
     for (int i=0;i<4;i++){
-        res.col(i) = vec.segment(3*i,3);
+        res.row(i) = vec.segment(3*i,3);
     }
     return res;
  }

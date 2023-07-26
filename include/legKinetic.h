@@ -5,14 +5,14 @@
 
 class Leg{
 public:
-    int id;
+    int id = 0;
     Vec3 lx;
     Vec3 theta;
     // 0,2 --> left 1; 1,3 --> right -1
     int side(){
         return (id&1)?-1:1;
     }
-
+    Leg(int index, Vec3 length);
     // input theta return delta p 
     Vec3 forwardKinetic(Vec3 theta);
     // input delta p return theta

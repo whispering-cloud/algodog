@@ -7,7 +7,7 @@
 class Balancer{
 public:
     Balancer(){};
-    Balancer(Vec3 l, Vec12 vecW, Vec12 vecU, Vec6 vecS);
+    Balancer(Vec3 l, Vec12 vecW, Vec12 vecU, Vec6 vecS, double alpha, double beta, double fric);
     ~Balancer();
     Vec12 solveKinetic();
     Mat3 Rs_b;

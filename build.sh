@@ -1,3 +1,3 @@
 cmake -S ./ -B ./build
 cd ./build
-make
+make -j8

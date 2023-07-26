@@ -29,7 +29,7 @@ Vec12 solveQP(Mat12 G,Vec12 g0,Eigen::Matrix<double, -1, -1> CE,Eigen::VectorXd 
     quadprogpp::Matrix<double> _G,_CE,_CI;
     quadprogpp::Vector<double> _g0,_ce0,_ci0;
     _G = tM(G);
-    _g0 = tV(g0);
+    _g0 = tV(g0);       
     _CE = tM(CE);
     _ce0 = tV(ce0);
     _CI = tM(CI);
@@ -42,11 +42,13 @@ Vec12 solveQP(Mat12 G,Vec12 g0,Eigen::Matrix<double, -1, -1> CE,Eigen::VectorXd 
 }
 
 
-Balancer::Balancer(Vec3 l, Vec12 vecW, Vec12 vecU, Vec6 vecS){
+Balancer::Balancer(Vec3 l, Vec12 vecW, Vec12 vecU, Vec6 vecS, double alpha, double beta, double fric){
+    configAlpha = alpha;
+    configBeta = beta;
+    configFric = fric;
     prevSupportF.setZero();
     for (int i=0;i<4;i++){
-        legs[i] = new Leg();
-        legs[i]->configLeg(i, l);
+        legs[i] = new Leg(i,l);
     }
     gt = new FSM(STAND);
     vecG << 0, 0, -9.8;
@@ -69,13 +71,18 @@ Balancer::~Balancer(){
 Vec12 Balancer::solveKinetic(){
 
     Eigen::Matrix<double, 6, 12> matA;
+    matA.setZero();
     for (int i = 0;i < 4;i++){
         matA.block(0, 3*i, 3, 3) = Eigen::MatrixXd::Identity(3, 3);
         Vec3 pgi;
         pgi = Rs_b * (legs[i]->getPb_i()) - Rs_b * Pg_b;
+        
+
         matA.block(3,3*i,3,3) = crossMultiplyMat(pgi);
     }
-    Mat12 matG = matA.transpose()*matS*matA + configAlpha*matW + configBeta*matU;
+    Mat12 matG;
+    matG.setZero();
+    matG = matA.transpose()*matS*matA + configAlpha*matW + configBeta*matU;
     Vec12 x;
     Vec12 g0;
     vecb_d.head(3) = mass * (vecAcc - vecG);
@@ -93,19 +100,54 @@ Vec12 Balancer::solveKinetic(){
     }
     Eigen::Matrix<double, -1, -1> CE, CI;
     Eigen::VectorXd ce0, ci0;
-    ce0.resize(3*4-n);
+    if (n!=0)
+        ce0.resize(3*n);
+    else
+        ce0.resize(3);
     ce0.setZero();
-    CE.resize(3*4-n,12);
+    if (m!=0)
+        ci0.resize(5*m);
+    else
+        ci0.resize(3);
+    ci0.setZero();
+    if (n!=0){
+        CE.resize(3*n,12);
+        CE.setZero();
+    }
+    else
+    {
+        CE.resize(3,12);
+        CE.setZero();
+        CE.block(0,0,3,3) = Eigen::MatrixXd::Identity(3, 3);
+    }
+    if (m!=0)
+    {
+        CI.resize(5*m,12);
+        CI.setZero();
+    }
+    else
+    {
+        CI.resize(3,12);
+        CI.setZero();
+        CI.block(0,0,5,3) = fricMat;
+    }
+        
+    
     int tmpn=0, tmpm=0;
+    //std::cout<< CE << std::endl << ' ' << std::endl;
+
+
     for (int i=0;i<4;i++){
-        if (contactState[i]){
+        if (!contactState[i]){
             CE.block(tmpn*3,i*3,3,3) = Eigen::MatrixXd::Identity(3, 3);
             tmpn++;
         }else{
-            CI.block(tmpn*5,i*3,5,3) = fricMat;
+            CI.block(tmpm*5,i*3,5,3) = fricMat;
             tmpm++;
         }
     }
+    //std::cout<< CE << std::endl << CI << std::endl;
+
     x = solveQP(matG, g0, CE.transpose(), ce0, CI.transpose(), ci0);
     return x;
 }
