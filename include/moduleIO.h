@@ -41,9 +41,9 @@ extern "C" struct initParams{
 };
 
 extern "C" struct updateParams{
-    // 目标刚体加速度
+    // 刚体加速度
     double a00, a01, a02;
-    // 目标刚体角加速度
+    // 刚体角加速度
     double oa0, oa1, oa2;
     
     // 当前刚体欧拉角

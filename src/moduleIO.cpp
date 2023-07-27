@@ -72,6 +72,7 @@ extern "C" updateResult update(updateParams param){
 
     supportF = dogrun->solveKinetic();
     Mat4x3 t;
+    std::cout<< supportF << std::endl;
     t = taucalc.invKinetic(supportF, dogrun);
     res.t00 = t(0,0);
     res.t01 = t(0,1);
