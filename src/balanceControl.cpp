@@ -149,5 +149,6 @@ Vec12 Balancer::solveKinetic(){
     //std::cout<< CE << std::endl << CI << std::endl;
 
     x = solveQP(matG, g0, CE.transpose(), ce0, CI.transpose(), ci0);
+    prevSupportF = x;
     return x;
 }

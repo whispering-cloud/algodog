@@ -72,7 +72,7 @@ Vec3 Leg::getPb_i(){
 
 Leg::Leg(int index, Vec3 length){
     id = index;
-    lx(0) = length(0);
-    lx(1) = length(1) * side();
+    lx(0) = length(0) * side();
+    lx(1) = -length(1);
     lx(2) = -length(2);
 }
